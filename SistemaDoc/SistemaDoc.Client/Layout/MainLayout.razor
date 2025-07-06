@@ -1,0 +1,43 @@
+﻿@using SistemaDoc.Client.Services
+@using SistemaDoc.Shared.Models
+@inject NavigationManager NavigationManager
+@inherits LayoutComponentBase
+@inject AuthService Auth
+<div class="page">
+    <div class="sidebar">
+        <NavMenu />
+    </div>
+
+    <main>
+        <div class="top-row px-4">
+            @if (usuario != null)
+            {
+                <p>Bienvenido, @usuario.NombreUsuario (@usuario.Rol)</p>
+                <button @onclick="CerrarSesion">Cerrar sesión</button>
+            }
+            
+        </div>
+
+        <article class="content px-4">
+            @Body
+        </article>
+    </main>
+</div>
+
+@code {
+    Usuario? usuario;
+
+    protected override async Task OnInitializedAsync()
+    {
+        usuario = await Auth.ObtenerUsuarioActual();
+    }
+}
+
+@code {
+    async Task CerrarSesion()
+    {
+        await Auth.Logout();
+        NavigationManager.NavigateTo("", true);
+    }
+}
+

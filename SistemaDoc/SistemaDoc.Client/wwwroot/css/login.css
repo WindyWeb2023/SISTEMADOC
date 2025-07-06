@@ -1,0 +1,78 @@
+﻿namespace SistemaDoc.Client.wwwroot.css {
+    body
+
+{
+    margin: 0;
+    padding: 0;
+    font-family: "Segoe UI", sans-serif;
+    background-color: #f2f2f2;
+}
+
+.login-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+.login-box {
+    background-color: white;
+    padding: 2rem;
+    border-radius: 10px;
+    box-shadow: 0 0 15px rgba(0,0,0,0.2);
+    width: 100%;
+    max-width: 400px;
+    box-sizing: border-box;
+}
+
+    .login-box h2 {
+        text-align: center;
+        margin-bottom: 1.5rem;
+    }
+
+    .login-box input {
+        display: block;
+        width: 100%;
+        padding: 0.75rem;
+        margin-bottom: 1rem;
+        border-radius: 5px;
+        border: 1px solid #ccc;
+        box-sizing: border-box;
+    }
+
+    .login-box button {
+        width: 100%;
+        padding: 0.75rem;
+        background-color: #0a4d8c;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        font-weight: bold;
+    }
+
+        .login-box button:hover {
+            background-color: #083b6a;
+        }
+
+.divider:after,
+.divider:before {
+    content: "";
+    flex: 1;
+    height: 1px;
+    background: #eee;
+}
+
+.h-custom {
+    height: calc(100% - 73px);
+}
+
+@media (max-width: 450px) {
+    .h-custom {
+        height: 100%;
+    }
+}
+/* Responsive adjustments */
+
+
+}

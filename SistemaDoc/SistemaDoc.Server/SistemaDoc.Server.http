@@ -1,0 +1,6 @@
+@SistemaDoc.Server_HostAddress = http://localhost:5173
+
+GET {{SistemaDoc.Server_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

@@ -1,0 +1,66 @@
+﻿@page "/ocr"
+@inject IJSRuntime JS
+@inject HttpClient Http
+
+<link href="css/formulario.css" rel="stylesheet" />
+
+<div class="form-container">
+    <form class="form-box" @onsubmit="GuardarDatos">
+        <h2>Procesar Solicitud</h2>
+
+        <input type="file" id="fileInput" @onchange="ProcesarImagen" />
+        <textarea @bind="TextoExtraido" rows="5" hidden="hidden" placeholder="Texto extraído..." readonly></textarea>
+
+        <input @bind="Nombre" placeholder="Nombre del Solicitante" />
+        <input @bind="CI" hidden="hidden" placeholder="CI" />
+        <input @bind="Fecha" placeholder="Fecha de Solicitud" />
+        <input @bind="Motivo" placeholder="Motivo de la Solicitud" />
+
+        <button type="submit">Guardar</button>
+    </form>
+</div>
+
+@code {
+    string TextoExtraido = "";
+    string Nombre = "";
+    string CI = "";
+    string Fecha = "";
+    string Motivo = "";
+
+    async Task ProcesarImagen()
+    {
+        TextoExtraido = await JS.InvokeAsync<string>("recognizeTextFromImage", "fileInput");
+        Nombre = ExtractField(TextoExtraido, "Nombre del Solicitante:");
+        CI = ExtractField(TextoExtraido, "CI: ");
+        Fecha = ExtractField(TextoExtraido, "Fecha de Solicitud:");
+        Motivo = ExtractField(TextoExtraido, "Motivo de la Solicitud:");
+    }
+
+    string ExtractField(string input, string label)
+    {
+        var line = input.Split('\n').FirstOrDefault(l => l.Trim().StartsWith(label));
+        return line?.Replace(label, "").Trim() ?? "";
+    }
+
+    async Task GuardarDatos()
+    {
+        var solicitud = new
+        {
+            NombreSolicitante = Nombre,
+            Documento = Motivo,
+            FechaSolicitud = DateTime.TryParse(Fecha, out var f) ? f : DateTime.Now,
+            Observaciones = Motivo
+        };
+
+        var response = await Http.PostAsJsonAsync("api/solicitudes", solicitud);
+        if (response.IsSuccessStatusCode)
+        {
+            await JS.InvokeVoidAsync("alert", "Guardado exitosamente.");
+            TextoExtraido = Nombre = CI = Fecha = Motivo = "";
+        }
+        else
+        {
+            await JS.InvokeVoidAsync("alert", "Error al guardar.");
+        }
+    }
+}

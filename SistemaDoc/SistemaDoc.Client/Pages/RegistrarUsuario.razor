@@ -1,0 +1,46 @@
+﻿@page "/reguser"
+@using SistemaDoc.Shared.Models
+@inject HttpClient Http
+@inject NavigationManager Nav
+@inject IJSRuntime JS
+
+<link href="css/formulario.css" rel="stylesheet" />
+
+<div class="form-container">
+    <form class="form-box" @onsubmit="Registrar">
+        <h2>Registro de Usuario</h2>
+
+        <input @bind="Nuevo.Nombre" placeholder="Nombre" required />
+        <input @bind="Nuevo.Apellido" placeholder="Apellido" required />
+        <input @bind="Nuevo.Cargo" placeholder="Cargo" required />
+        <input @bind="Nuevo.NombreUsuario" placeholder="Usuario" required />
+        <input @bind="Nuevo.Contrasena" type="password" placeholder="Contraseña" required />
+
+        <select @bind="Nuevo.Rol" required>
+            <option disabled selected value="">Seleccione un rol</option>
+            <option value="administrador">Administrador</option>
+            <option value="operador">Operador</option>
+        </select>
+
+        <button type="submit">Registrar</button>
+    </form>
+</div>
+
+@code {
+    Usuario Nuevo = new();
+
+    async Task Registrar()
+    {
+        var result = await Http.PostAsJsonAsync("api/auth/registrar", Nuevo);
+        if (result.IsSuccessStatusCode)
+        {
+            await JS.InvokeVoidAsync("alert", "Usuario registrado.");
+            Nav.NavigateTo("/reguser");
+        }
+        else
+        {
+            var error = await result.Content.ReadAsStringAsync();
+            await JS.InvokeVoidAsync("alert", "Error: " + error);
+        }
+    }
+}
