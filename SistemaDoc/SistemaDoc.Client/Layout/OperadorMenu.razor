@@ -1,6 +1,6 @@
 ﻿<div class="top-row ps-3 navbar navbar-dark">
     <div class="container-fluid">
-        <a class="navbar-brand" href="home">Sistema PID</a>
+        <a class="navbar-brand" href="opinicio">Sistema PID</a>
         <button title="Navigation menu" class="navbar-toggler" @onclick="ToggleNavMenu">
             <span class="navbar-toggler-icon"></span>
         </button>
@@ -10,30 +10,18 @@
 <div class="@NavMenuCssClass nav-scrollable" @onclick="ToggleNavMenu">
     <nav class="flex-column">
         <div class="nav-item px-3">
-            <NavLink class="nav-link" href="home" Match="NavLinkMatch.All">
+            <NavLink class="nav-link" href="opinicio" Match="NavLinkMatch.All">
                 <span class="bi bi-house-door-fill-nav-menu" aria-hidden="true"></span> Inicio
             </NavLink>
         </div>
+       
+        
         <div class="nav-item px-3">
-            <NavLink class="nav-link" href="reguser">
-                <span class="bi bi-plus-square-fill-nav-menu" aria-hidden="true"></span> Administrar Usuario
-            </NavLink>
-        </div>
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="ocr">
-                <span class="bi bi-list-nested-nav-menu" aria-hidden="true"></span>Cargar Solicitud
-            </NavLink>
-        </div>
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="seguimiento">
+            <NavLink class="nav-link" href="opseguimiento">
                 <span class="bi bi-list-nested-nav-menu" aria-hidden="true"></span>Seguimiento de Solicitud
             </NavLink>
         </div>
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="certificacion">
-                <span class="bi bi-list-nested-nav-menu" aria-hidden="true"></span>Gestion de Certificacion
-            </NavLink>
-        </div>
+        
     </nav>
 </div>
 

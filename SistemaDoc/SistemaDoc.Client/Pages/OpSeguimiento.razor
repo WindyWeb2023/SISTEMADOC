@@ -1,0 +1,70 @@
+﻿@page "/opseguimiento"
+@layout OperadorLayout
+@using SistemaDoc.Shared.Models
+@inject HttpClient Http
+@inject IJSRuntime JS
+
+<h3>Lista de Solicitudes</h3>
+
+@if (solicitudes == null)
+{
+    <p><em>Cargando...</em></p>
+}
+else if (solicitudes.Count == 0)
+{
+    <p>No hay solicitudes registradas.</p>
+}
+else
+{
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Nombre Solicitante</th>
+                <th>Referencia</th>
+                <th>Fecha</th>
+                <th>Obesrvaciones</th>
+                <th>Estado</th>
+                <th>Area</th>
+                <th>Categoria</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var s in solicitudes)
+            {
+                <tr>
+                    <td>@s.Id</td>
+                    <td>@s.NombreSolicitante</td>
+                    <td>@s.Referencia</td>
+                    <td>@s.FechaSolicitud.ToString("dd/MM/yyyy")</td>
+                    <td>@s.Observaciones</td>
+                    <td>@s.Estado</td>
+                    <td>@s.NombreArea</td>
+                    <td>@s.NombreCategoria</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+@code {
+    Usuario? usuarioActual;
+    List<SolicitudDTO>? solicitudes;
+
+    protected override async Task OnInitializedAsync()
+    {
+        // Leer usuario actual del localStorage
+        var jsonUsuario = await JS.InvokeAsync<string>("localStorage.getItem", "usuarioActual");
+
+        if (!string.IsNullOrEmpty(jsonUsuario))
+        {
+            usuarioActual = System.Text.Json.JsonSerializer.Deserialize<Usuario>(jsonUsuario);
+
+            if (usuarioActual != null)
+            {
+                // Llamar al endpoint filtrando por usuario
+                solicitudes = await Http.GetFromJsonAsync<List<SolicitudDTO>>($"api/solicitudes/{usuarioActual.Cargo}");
+            }
+        }
+    }
+}

@@ -1,4 +1,5 @@
 ﻿@page "/"
+@using SistemaDoc.Shared.Models
 @layout EmptyLayout
 @inject SistemaDoc.Client.Services.AuthService Auth
 @inject NavigationManager Nav
@@ -15,7 +16,7 @@
       <div class="col-md-8 col-lg-6 col-xl-4 offset-xl-1">
           <h2 style="text-align:center">SISTEMA DE PROCESAMIENTO INTELIGENTE DE DOCUMENTOS </h2>
                
-                <form @onsubmit="IniciarSesion">
+                <form @onsubmit="IniciarSesion" @onsubmit:preventDefault>
           
 
           
@@ -64,13 +65,27 @@
 @code {
     string Usuario = "";
     string Contrasena = "";
+   
 
     async Task IniciarSesion()
     {
-        var ok = await Auth.Login(Usuario, Contrasena);
-        if (ok)
+        
+        var user = await Auth.Login(Usuario, Contrasena);
+
+        if (user != null)
         {
-            Nav.NavigateTo("/home");
+            if (user.Rol == "Administrador")
+            {
+                Nav.NavigateTo("/home"); // Layout para admin
+            }
+            else if (user.Rol == "Operador")
+            {
+                Nav.NavigateTo("/opinicio"); // Layout para operador
+            }
+            else
+            {
+                await JS.InvokeVoidAsync("alert", "Rol no reconocido.");
+            }
         }
         else
         {

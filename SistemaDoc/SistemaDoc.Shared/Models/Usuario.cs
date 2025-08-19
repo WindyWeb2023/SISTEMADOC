@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -15,5 +16,8 @@ namespace SistemaDoc.Shared.Models
         public string NombreUsuario { get; set; } = "";
         public string Contrasena { get; set; } = "";
         public string Rol { get; set; } = ""; // o "administrador"
+        
+        public List<Solicitud>? Solicituds { get; set; }
+
     }
 }

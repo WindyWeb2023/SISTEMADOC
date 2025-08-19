@@ -1,4 +1,5 @@
 ﻿@page "/ocr"
+@layout MainLayout
 @inject IJSRuntime JS
 @inject HttpClient Http
 
@@ -14,6 +15,8 @@
         <input @bind="Nombre" placeholder="Nombre del Solicitante" />
         <input @bind="CI" hidden="hidden" placeholder="CI" />
         <input @bind="Fecha" placeholder="Fecha de Solicitud" />
+        <input @bind="Area" placeholder="Area" />
+        <input @bind="Categoria" placeholder="Categoria" />
         <input @bind="Motivo" placeholder="Motivo de la Solicitud" />
 
         <button type="submit">Guardar</button>
@@ -25,7 +28,12 @@
     string Nombre = "";
     string CI = "";
     string Fecha = "";
+    string Area = "";
+    string Categoria = "";
     string Motivo = "";
+
+    int AreaId;
+    int CategoriaId;
 
     async Task ProcesarImagen()
     {
@@ -33,9 +41,27 @@
         Nombre = ExtractField(TextoExtraido, "Nombre del Solicitante:");
         CI = ExtractField(TextoExtraido, "CI: ");
         Fecha = ExtractField(TextoExtraido, "Fecha de Solicitud:");
+        Area = ExtractField(TextoExtraido, "Area:");
+        Categoria = ExtractField(TextoExtraido, "Categoria:");
         Motivo = ExtractField(TextoExtraido, "Motivo de la Solicitud:");
-    }
 
+        AreaId = Area.ToLower() switch
+        {
+            "salud" => 1,
+            "educacion" => 2,
+            "parque o jardines" => 3,
+            _ => 0 // Desconocido
+        };
+
+        CategoriaId = Categoria.ToLower() switch
+        {
+            "mantenimiento" => 1,
+            "refaccion" => 2,
+            "instalacion" => 3,
+            _ => 0
+        };
+    }
+     
     string ExtractField(string input, string label)
     {
         var line = input.Split('\n').FirstOrDefault(l => l.Trim().StartsWith(label));
@@ -47,20 +73,22 @@
         var solicitud = new
         {
             NombreSolicitante = Nombre,
-            Documento = Motivo,
+            Referencia = Motivo,
             FechaSolicitud = DateTime.TryParse(Fecha, out var f) ? f : DateTime.Now,
-            Observaciones = Motivo
+            Observaciones = Motivo,
+            IdArea = AreaId,
+            IdCategoria = CategoriaId
         };
 
-        var response = await Http.PostAsJsonAsync("api/solicitudes", solicitud);
+        var response = await Http.PostAsJsonAsync("api/Solicitudes", solicitud);
         if (response.IsSuccessStatusCode)
         {
             await JS.InvokeVoidAsync("alert", "Guardado exitosamente.");
-            TextoExtraido = Nombre = CI = Fecha = Motivo = "";
+            TextoExtraido = Nombre = CI = Fecha = Area = Categoria = Motivo = "";
         }
         else
         {
-            await JS.InvokeVoidAsync("alert", "Error al guardar.");
+            await JS.InvokeVoidAsync("alert", "Error al guardar.:{content}");
         }
     }
 }

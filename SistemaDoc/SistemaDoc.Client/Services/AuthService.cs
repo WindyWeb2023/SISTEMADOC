@@ -16,16 +16,23 @@ namespace SistemaDoc.Client.Services
             _js = js;
         }
 
-        public async Task<bool> Login(string usuario, string contrasena)
+        public async Task<Usuario?> Login(string usuario, string contrasena)
         {
-            var response = await _http.PostAsJsonAsync("api/auth/login", new { NombreUsuario = usuario, Contrasena = contrasena });
+            var response = await _http.PostAsJsonAsync("api/auth/login", new
+            {
+                NombreUsuario = usuario,
+                Contrasena = contrasena
+            });
 
             if (!response.IsSuccessStatusCode)
-                return false;
+                return null;
 
             var user = await response.Content.ReadFromJsonAsync<Usuario>();
-            await _js.InvokeVoidAsync("localStorage.setItem", "usuarioActual", JsonSerializer.Serialize(user));
-            return true;
+            if (user != null)
+            {
+                await _js.InvokeVoidAsync("localStorage.setItem", "usuarioActual", JsonSerializer.Serialize(user));
+            }
+            return user;
         }
 
         public async Task<Usuario?> ObtenerUsuarioActual()
@@ -38,6 +45,9 @@ namespace SistemaDoc.Client.Services
         {
             await _js.InvokeVoidAsync("localStorage.removeItem", "usuarioActual");
         }
+
+        
+        
     }
 
 }

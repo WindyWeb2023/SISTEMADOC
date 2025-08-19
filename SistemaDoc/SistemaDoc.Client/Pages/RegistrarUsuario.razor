@@ -12,14 +12,19 @@
 
         <input @bind="Nuevo.Nombre" placeholder="Nombre" required />
         <input @bind="Nuevo.Apellido" placeholder="Apellido" required />
-        <input @bind="Nuevo.Cargo" placeholder="Cargo" required />
+        <select @bind="Nuevo.Cargo" required>
+            <option disabled selected value="">Seleccione un Cargo</option>
+            <option value="Salud">Salud</option>
+            <option value="Educacion">Educacion</option>
+            <option value="Parque y Jardines">Parque y Jardines</option>
+        </select>
         <input @bind="Nuevo.NombreUsuario" placeholder="Usuario" required />
         <input @bind="Nuevo.Contrasena" type="password" placeholder="Contraseña" required />
 
         <select @bind="Nuevo.Rol" required>
             <option disabled selected value="">Seleccione un rol</option>
-            <option value="administrador">Administrador</option>
-            <option value="operador">Operador</option>
+            <option value="Administrador">Administrador</option>
+            <option value="Operador">Operador</option>
         </select>
 
         <button type="submit">Registrar</button>

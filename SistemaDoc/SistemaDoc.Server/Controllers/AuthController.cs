@@ -20,13 +20,14 @@ namespace SistemaDoc.Server.Controllers
         public async Task<ActionResult<Usuario>> Login([FromBody] Usuario credenciales)
         {
             var user = await _context.Usuarios
-                    .FirstOrDefaultAsync(u => u.NombreUsuario == credenciales.NombreUsuario && u.Contrasena == credenciales.Contrasena);
-
+                    .FirstOrDefaultAsync(u => u.NombreUsuario == credenciales.NombreUsuario && u.Contrasena == credenciales.Contrasena );
+            
             if (user == null)
                 return Unauthorized("Credenciales incorrectas.");
 
             return Ok(user); // Devolvemos el usuario completo (sin token)
         }
+
 
         [HttpPost("registrar")]
         public async Task<ActionResult> Registrar(Usuario nuevo)
